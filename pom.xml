@@ -33,7 +33,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.2.1</version>
         <configuration>
-          <mainClass>cs3517.hale.mud.MUD</mainClass>
+          <mainClass>cs3517.hale.mud.MudServer</mainClass>
           <arguments>
             <argument>mymud.edg</argument>
             <argument>mymud.msg</argument>

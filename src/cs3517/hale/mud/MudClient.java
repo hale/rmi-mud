@@ -21,6 +21,6 @@ public class MudClient
     String url = "rmi://localhost/mud_game";
     Mud mudGame = (Mud) namingContext.lookup(url);
 
-    System.out.println(mudGame.toString());
+    System.out.println(mudGame.prettyPrint());
   }
 }

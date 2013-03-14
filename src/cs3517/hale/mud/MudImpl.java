@@ -202,10 +202,7 @@ public class MudImpl extends UnicastRemoteObject implements Mud
     System.out.println( vertexMap.size( ) + " vertices\n" );
   }
 
-  // This method enables us to display the entire MUD (mostly used
-  // for testing purposes so that we can check that the structure
-  // defined has been successfully parsed.
-  public String toString()
+  public String prettyPrint() throws RemoteException
   {
     String summary = "";
     Iterator iter = vertexMap.keySet().iterator();
@@ -219,30 +216,30 @@ public class MudImpl extends UnicastRemoteObject implements Mud
     return summary;
   }
 
-  public String locationInfo( String loc )
+  public String locationInfo( String loc ) throws RemoteException
   {
     return getVertex( loc ).toString();
   }
 
-  public String startLocation()
+  public String startLocation() throws RemoteException
   {
     return _startLocation;
   }
 
-  public void addThing( String loc, String thing )
+  public void addThing( String loc, String thing ) throws RemoteException
   {
     Vertex v = getVertex( loc );
     v._things.add( thing );
   }
 
   public void delThing( String loc,
-      String thing )
+      String thing ) throws RemoteException
   {
     Vertex v = getVertex( loc );
     v._things.remove( thing );
   }
 
-  public String moveThing( String loc, String dir, String thing )
+  public String moveThing( String loc, String dir, String thing ) throws RemoteException
   {
     Vertex v = getVertex( loc );
     Edge e = v._routes.get( dir );
@@ -257,7 +254,7 @@ public class MudImpl extends UnicastRemoteObject implements Mud
    * A main method that can be used to testing purposes to ensure
    * that the MUD is specified correctly.
    */
-  public static void main(String[] args)
+  public static void main(String[] args) throws RemoteException
   {
     if (args.length != 3) {
       System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
