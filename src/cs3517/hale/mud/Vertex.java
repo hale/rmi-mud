@@ -36,7 +36,7 @@ class Vertex
     String direction;
     while (iter.hasNext()) {
       direction = (String)iter.next();
-      summary += "To the " + direction + " there is " + ((Edge)_routes.get( direction ))._view + "\n";
+      summary += "To the " + direction + " there is " + (_routes.get( direction ))._view + "\n";
     }
     iter = _things.iterator();
     if (iter.hasNext()) {

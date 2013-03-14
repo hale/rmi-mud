@@ -217,7 +217,7 @@ public class MUD
     while (iter.hasNext()) {
       loc = (String)iter.next();
       summary = summary + "Node: " + loc;
-      summary += ((Vertex)vertexMap.get( loc )).toString();
+      summary += (vertexMap.get( loc )).toString();
     }
     summary += "Start location = " + _startLocation;
     return summary;
