@@ -265,4 +265,10 @@ public class MudImpl extends UnicastRemoteObject implements Mud
       System.out.println( m.toString() );
     } catch( RemoteException e) { System.out.println(e); }
   }
+
+  public String pickupItem(String player, String item, String location) throws RemoteException
+  {
+    // TODO
+    return "Not yet implemented";
+  }
 }

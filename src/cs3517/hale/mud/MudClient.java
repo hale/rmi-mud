@@ -41,6 +41,7 @@ public class MudClient
         System.out.println("\tsouth\tMove south");
         System.out.println("\twest\tMove west");
         System.out.println("\texit\tQuit the game");
+        System.out.println("\tpickup <thing>\tAdd an item in the room to your inventory.");
       }
       else if (answer.equals("look"))
       {
@@ -57,6 +58,15 @@ public class MudClient
           System.out.println( mudGame.locationInfo( loc ));
         }
       }
+      else
+      {
+        String[] ansParts = answer.split("\\s+");
+        if (ansParts.length != 2) continue;
+        if (ansParts[0].equals("pickup"))
+        {
+          System.out.println( mudGame.pickupItem( player, ansParts[1], loc ));
+        }
+      }
     }
 
   }
@@ -71,7 +81,7 @@ public class MudClient
     Scanner userIn = new Scanner( System.in );
     System.out.println(question);
     System.out.print(">> ");
-    String answer = userIn.next();
+    String answer = userIn.nextLine();
     System.out.println();
     return answer;
   }

@@ -41,4 +41,13 @@ public interface Mud extends Remote
    * defined has been successfully parsed.
    */
   public String prettyPrint() throws RemoteException;
+
+  /**
+   * This method attempt to add the item to a player's list of items. It
+   * removes the item from the game world, and adds it to a hashmap of items to
+   * players.  Players cannot be picked up. TODO: make a player list, add to it
+   * when players join. write a special addPlayer method which adds to the list
+   * of players then calls addThing.
+   */
+  public String pickupItem(String player, String item, String location) throws RemoteException;
 }
