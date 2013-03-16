@@ -33,6 +33,12 @@ public class MudClient
     String answer = question("Where would you like to go? ('exit' to exit)");
     while(!answer.equals("exit"))
     {
+      if (answer.equals("look"))
+      {
+        System.out.println(mudGame.locationInfo( loc ));
+        answer = question("Where would you like to go? ('exit' to exit)");
+        continue;
+      }
       String newLoc = mudGame.moveThing( loc, answer, player );
       if (newLoc.equals(loc)) System.out.println("Can't do that.");
       System.out.println( mudGame.locationInfo( loc ));
