@@ -30,28 +30,46 @@ public class MudClient
     mudGame.addThing( loc, player);
     System.out.println(mudGame.locationInfo( loc ));
 
-    String answer = question("Where would you like to go? ('exit' to exit)");
-    while(!answer.equals("exit"))
+    for (String answer = question(); !answer.equals("exit"); answer=question())
     {
-      if (answer.equals("look"))
+      if (answer.equals("help"))
+      {
+        System.out.println("Type one of the following commands at the prompt");
+        System.out.println("\tlook\tShow a description of the current location.");
+        System.out.println("\tnorth\tMove north");
+        System.out.println("\teast\tMove east");
+        System.out.println("\tsouth\tMove south");
+        System.out.println("\twest\tMove west");
+        System.out.println("\texit\tQuit the game");
+      }
+      else if (answer.equals("look"))
       {
         System.out.println(mudGame.locationInfo( loc ));
-        answer = question("Where would you like to go? ('exit' to exit)");
-        continue;
       }
-      String newLoc = mudGame.moveThing( loc, answer, player );
-      if (newLoc.equals(loc)) System.out.println("Can't do that.");
-      System.out.println( mudGame.locationInfo( loc ));
-      loc = newLoc;
-      answer = question("Where would you like to go?");
+      else if (answer.equals("north") || answer.equals("east")
+          || answer.equals("south") || answer.equals("west"))
+      {
+        String newLoc = mudGame.moveThing( loc, answer, player );
+        if (newLoc.equals(loc))
+          System.out.println("Can't do that.");
+        else {
+          loc = newLoc;
+          System.out.println( mudGame.locationInfo( loc ));
+        }
+      }
     }
 
   }
 
-  private static String question( String q )
+  private static String question()
+  {
+    return question("Please type an action, or 'help' for help");
+  }
+
+  private static String question(String question)
   {
     Scanner userIn = new Scanner( System.in );
-    System.out.println(q);
+    System.out.println(question);
     System.out.print(">> ");
     String answer = userIn.next();
     System.out.println();
