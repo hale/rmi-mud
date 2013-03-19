@@ -4,13 +4,12 @@ import java.rmi.*;
 import javax.naming.*;
 
 /**
- * This server class instantiates a remote MUD object, registers it with
- * the naming service, and waits for MUD clients to invoke methods.
+ * This server class instantiates a Mud Manager object and registers it with
+ * the naming service.
  */
 
 public class MudServer
 {
-  private static final int GAMES_N = 3;
   public static void main (String[] args) throws RemoteException, NamingException
   {
     if (args.length != 3)
@@ -19,22 +18,15 @@ public class MudServer
       return;
     }
 
-    for (int i = 0; i < GAMES_N; i++)
-    {
-      makeMud(i, args[0], args[1], args[2]);
-    }
-  }
-
-  private static void makeMud( int i, String edges, String messages, String things )
-    throws RemoteException, NamingException
-  {
-    System.out.println("Constructing MUD object " + i);
-    MudImpl mudGame = new MudImpl( edges, messages, things );
+    MudManagerImpl mudManager = new MudManagerImpl();
+    mudManager.makeMud( "easy", args[0], args[1], args[2] );
+    mudManager.makeMud( "hard", args[0], args[1], args[2] );
 
     System.out.println("Binding MUD object to rmiregistry");
     Context namingContext = new InitialContext();
-    namingContext.bind("rmi:mud_game_" + i, mudGame);
+    namingContext.bind("rmi:mud_game_mud_manager", mudManager);
 
     System.out.println("Waiting for invocations from clients...");
   }
+
 }
