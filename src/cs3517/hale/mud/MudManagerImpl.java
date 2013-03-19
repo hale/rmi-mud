@@ -3,7 +3,7 @@ package cs3517.hale.mud;
 import java.rmi.*;
 import java.rmi.server.*;
 import javax.naming.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Implementation of the MudManager interface.
@@ -23,5 +23,26 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
     namingContext.bind("rmi:mud_game_" + name, mudGame);
 
     System.out.println("Waiting for invocations from clients...");
+  }
+
+  public String printableMudList() throws RemoteException, NamingException
+  {
+    String list = "";
+    Context namingContext = new InitialContext();
+    Enumeration<NameClassPair> e = namingContext.list("rmi://localhost/");
+    while (e.hasMoreElements())
+    {
+      String mudName = e.nextElement().getName();
+      if (!mudName.equals("mud_game_mud_manager"))
+        list += "\t" + mudName + "\n";
+    }
+    return list;
+  }
+
+  public Mud getGame(String name) throws RemoteException, NamingException
+  {
+    Context namingContext = new InitialContext();
+    String url = "rmi://localhost/" + name;
+    return (Mud) namingContext.lookup( url );
   }
 }

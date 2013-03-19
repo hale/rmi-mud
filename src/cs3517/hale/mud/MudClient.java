@@ -12,7 +12,9 @@ public class MudClient
   public static void main (String[] args) throws NamingException, RemoteException
   {
     Context namingContext = new InitialContext();
-    Mud mudGame = null;
+
+    String url = "rmi://localhost/mud_game_mud_manager";
+    MudManager mudManager = (MudManager) namingContext.lookup( url );
 
     /*
      * 1. print a list of available MUDs on the server
@@ -20,23 +22,13 @@ public class MudClient
      * 3. namingContext.lookup( chosen mud )
      * 4. start the game with the mudGame returned by namingContext.
      */
-    Enumeration<NameClassPair> e = namingContext.list("rmi://localhost/");
-    while (e.hasMoreElements())
-      System.out.println("\t" + e.nextElement().getName() );
-
+    System.out.println( mudManager.printableMudList() );
     String mudString = question("Pick a MUD game from the list above");
-    String url = "rmi://localhost/" + mudString;
-    try
-    {
-      mudGame = (Mud) namingContext.lookup(url);
-    }
-    catch( NamingException nameExc )
-    {
-      System.out.println("Game not found.  Exiting.");
-      return;
-    }
+
+    Mud mudGame = mudManager.getGame( mudString );
 
     String loc = mudGame.startLocation();
+    // TODO: put the first bit of the for loop in the player initialiser.
     String player;
     for (player = question("What is your name?"); !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
     {
