@@ -10,6 +10,7 @@ import javax.naming.*;
 
 public class MudServer
 {
+  private static final int GAMES_N = 3;
   public static void main (String[] args) throws RemoteException, NamingException
   {
     if (args.length != 3)
@@ -17,12 +18,21 @@ public class MudServer
       System.err.println("Usage: java Graph <edgesfile> <messagesfile> <thingsfile>");
       return;
     }
-    System.out.println("Constructing MUD object...");
-    MudImpl mudGame = new MudImpl( args[0], args[1], args[2] );
+
+    for (int i = 0; i < GAMES_N; i++)
+    {
+      makeMud(i, args[0], args[1], args[2]);
+    }
+  }
+
+  private static void makeMud( int i, String edges, String messages, String things ) throws RemoteException, NamingException
+  {
+    System.out.println("Constructing MUD object " + i);
+    MudImpl mudGame = new MudImpl( edges, messages, things );
 
     System.out.println("Binding MUD object to rmiregistry");
     Context namingContext = new InitialContext();
-    namingContext.bind("rmi:mud_game", mudGame);
+    namingContext.bind("rmi:mud_game" + i, mudGame);
 
     System.out.println("Waiting for invocations from clients...");
   }
