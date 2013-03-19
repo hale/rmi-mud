@@ -188,6 +188,9 @@ public class MudImpl extends UnicastRemoteObject implements Mud
    * the interface.
    */
 
+  private HashSet<String> carriedItems = new HashSet<String>();
+  private HashMap<String, ArrayList<String>> inventories = new HashMap<String, ArrayList<String>>();
+
   /**
    * A constructor that creates the MUD.
    */
@@ -232,11 +235,41 @@ public class MudImpl extends UnicastRemoteObject implements Mud
     v._things.add( thing );
   }
 
+  private HashSet<String> players = new HashSet<String>();
+  public boolean addPlayer( String loc, String player ) throws RemoteException
+  {
+    if (players.contains( player )) return false;
+
+    players.add( player );
+    addThing( loc, player );
+    return true;
+  }
+
   public void delThing( String loc,
       String thing ) throws RemoteException
   {
     Vertex v = getVertex( loc );
     v._things.remove( thing );
+  }
+
+  public void delPlayer( String loc, String player ) throws RemoteException
+  {
+    // remove from players
+    players.remove( player );
+    // remove from game
+    delThing( loc, player );
+
+    ArrayList<String> inventory = inventories.get( player );
+    if (inventory == null) return;
+    for (String item : inventory)
+    {
+      // remove from carried items
+      carriedItems.remove( item );
+      // put back inventory
+      addThing( loc, item );
+    }
+    // remove this players inventory
+    inventories.remove( player );
   }
 
   public String moveThing( String loc, String dir, String thing ) throws RemoteException
@@ -268,7 +301,36 @@ public class MudImpl extends UnicastRemoteObject implements Mud
 
   public String pickupItem(String player, String item, String location) throws RemoteException
   {
-    // TODO
-    return "Not yet implemented";
+    if (!getVertex( location )._things.contains( item ))
+      return item + " is nowhere to be found.";
+
+    if (item.equals(player))
+      return "The ground moves away and you float for a few seconds.";
+    else if (players.contains(item))
+      return item + " gives you an angry stare.";
+    else
+    {
+      carriedItems.add( item );
+
+      ArrayList<String> inventory = inventories.get( player );
+      if (inventory == null)
+      {
+        inventory = new ArrayList<String>();
+        inventories.put( player, inventory );
+      }
+      inventory.add( item );
+
+      delThing( location, item );
+
+      return player + " picks up " + item;
+    }
+  }
+
+  public ArrayList<String> getInventory( String player ) throws RemoteException
+  {
+    assert( players.contains( player ));
+    ArrayList<String> inv = inventories.get( player );
+
+    return (inv == null) ? new ArrayList<String>() : inv;
   }
 }

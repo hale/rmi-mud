@@ -21,13 +21,14 @@ public class MudClient
     String url = "rmi://localhost/mud_game";
     Mud mudGame = (Mud) namingContext.lookup(url);
 
-    //System.out.println(mudGame.prettyPrint());
-
-
-    String player = question("What's your name?");
-
     String loc = mudGame.startLocation();
-    mudGame.addThing( loc, player);
+
+    String player;
+    for (player = question("What is your name?"); !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
+    {
+      System.out.println("That name has already been taken.");
+    }
+
     System.out.println(mudGame.locationInfo( loc ));
 
     for (String answer = question(); !answer.equals("exit"); answer=question())
@@ -35,13 +36,14 @@ public class MudClient
       if (answer.equals("help"))
       {
         System.out.println("Type one of the following commands at the prompt");
-        System.out.println("\tlook\tShow a description of the current location.");
-        System.out.println("\tnorth\tMove north");
-        System.out.println("\teast\tMove east");
-        System.out.println("\tsouth\tMove south");
-        System.out.println("\twest\tMove west");
-        System.out.println("\texit\tQuit the game");
+        System.out.println("\tlook\t\tShow a description of the current location.");
+        System.out.println("\tnorth\t\tMove north");
+        System.out.println("\teast\t\tMove east");
+        System.out.println("\tsouth\t\tMove south");
+        System.out.println("\twest\t\tMove west");
+        System.out.println("\texit\t\tQuit the game");
         System.out.println("\tpickup <thing>\tAdd an item in the room to your inventory.");
+        System.out.println("\tinventory\t\tView items you have picked up.");
       }
       else if (answer.equals("look"))
       {
@@ -58,6 +60,11 @@ public class MudClient
           System.out.println( mudGame.locationInfo( loc ));
         }
       }
+      else if (answer.equals("inventory"))
+      {
+        for ( String item : mudGame.getInventory( player ))
+          System.out.println( item );
+      }
       else
       {
         String[] ansParts = answer.split("\\s+");
@@ -68,12 +75,13 @@ public class MudClient
         }
       }
     }
+    mudGame.delPlayer( loc, player );
 
   }
 
   private static String question()
   {
-    return question("Please type an action, or 'help' for help");
+    return question("Type an action, or 'help' for help");
   }
 
   private static String question(String question)
