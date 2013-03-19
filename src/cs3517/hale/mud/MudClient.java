@@ -12,17 +12,31 @@ public class MudClient
   public static void main (String[] args) throws NamingException, RemoteException
   {
     Context namingContext = new InitialContext();
+    Mud mudGame = null;
 
-    System.out.println("rmiregistry bindings:");
+    /*
+     * 1. print a list of available MUDs on the server
+     * 2. user chooses which mud to join.
+     * 3. namingContext.lookup( chosen mud )
+     * 4. start the game with the mudGame returned by namingContext.
+     */
     Enumeration<NameClassPair> e = namingContext.list("rmi://localhost/");
     while (e.hasMoreElements())
-      System.out.println(e.nextElement().getName());
+      System.out.println("\t" + e.nextElement().getName() );
 
-    String url = "rmi://localhost/mud_game";
-    Mud mudGame = (Mud) namingContext.lookup(url);
+    String mudString = question("Pick a MUD game from the list above");
+    String url = "rmi://localhost/" + mudString;
+    try
+    {
+      mudGame = (Mud) namingContext.lookup(url);
+    }
+    catch( NamingException nameExc )
+    {
+      System.out.println("Game not found.  Exiting.");
+      return;
+    }
 
     String loc = mudGame.startLocation();
-
     String player;
     for (player = question("What is your name?"); !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
     {
@@ -31,6 +45,8 @@ public class MudClient
 
     System.out.println(mudGame.locationInfo( loc ));
 
+
+    /** Game Loop */
     for (String answer = question(); !answer.equals("exit"); answer=question())
     {
       if (answer.equals("help"))
