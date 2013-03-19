@@ -25,14 +25,15 @@ public class MudServer
     }
   }
 
-  private static void makeMud( int i, String edges, String messages, String things ) throws RemoteException, NamingException
+  private static void makeMud( int i, String edges, String messages, String things )
+    throws RemoteException, NamingException
   {
     System.out.println("Constructing MUD object " + i);
     MudImpl mudGame = new MudImpl( edges, messages, things );
 
     System.out.println("Binding MUD object to rmiregistry");
     Context namingContext = new InitialContext();
-    namingContext.bind("rmi:mud_game" + i, mudGame);
+    namingContext.bind("rmi:mud_game_" + i, mudGame);
 
     System.out.println("Waiting for invocations from clients...");
   }
