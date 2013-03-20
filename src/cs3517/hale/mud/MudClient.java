@@ -16,27 +16,19 @@ public class MudClient
     String url = "rmi://localhost/mud_game_mud_manager";
     MudManager mudManager = (MudManager) namingContext.lookup( url );
 
-    /*
-     * 1. print a list of available MUDs on the server
-     * 2. user chooses which mud to join.
-     * 3. namingContext.lookup( chosen mud )
-     * 4. start the game with the mudGame returned by namingContext.
-     */
+    if (question("Create a new MUD? (y/N)").equals("y"))
+      mudManager.makeMud( question("Type a unique name for your MUD") );
+
     System.out.println( mudManager.printableMudList() );
     String mudString = question("Pick a MUD game from the list above");
 
     Mud mudGame = mudManager.getGame( mudString );
 
     String loc = mudGame.startLocation();
-    // TODO: put the first bit of the for loop in the player initialiser.
+
     String player = question("What is your name?");
     for ( ; !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
-    {
       System.out.println("That name has already been taken.");
-    }
-
-    System.out.println(mudGame.locationInfo( loc ));
-
 
     /** Game Loop */
     for (String answer = question(); !answer.equals("exit"); answer=question())
@@ -51,7 +43,7 @@ public class MudClient
         System.out.println("\twest\t\tMove west");
         System.out.println("\texit\t\tQuit the game");
         System.out.println("\tpickup <thing>\tAdd an item in the room to your inventory.");
-        System.out.println("\tinventory\t\tView items you have picked up.");
+        System.out.println("\tinventory\tView items you have picked up.");
       }
       else if (answer.equals("look"))
       {
@@ -73,7 +65,7 @@ public class MudClient
         for ( String item : mudGame.getInventory( player ))
           System.out.println( item );
       }
-      else
+      else // currently, must be a 'pickup' command
       {
         String[] ansParts = answer.split("\\s+");
         if (ansParts.length != 2) continue;
@@ -84,7 +76,6 @@ public class MudClient
       }
     }
     mudGame.delPlayer( loc, player );
-
   }
 
   private static String question()
@@ -98,7 +89,6 @@ public class MudClient
     System.out.println(question);
     System.out.print(">> ");
     String answer = userIn.nextLine();
-    System.out.println();
     return answer;
   }
 }

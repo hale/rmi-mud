@@ -18,9 +18,9 @@ public class MudServer
       return;
     }
 
-    MudManagerImpl mudManager = new MudManagerImpl();
-    mudManager.makeMud( "easy", args[0], args[1], args[2] );
-    mudManager.makeMud( "hard", args[0], args[1], args[2] );
+    MudManagerImpl mudManager = new MudManagerImpl(args[0], args[1], args[2]);
+    mudManager.makeMud( "easy" );
+    mudManager.makeMud( "hard" );
 
     System.out.println("Binding MUD object to rmiregistry");
     Context namingContext = new InitialContext();

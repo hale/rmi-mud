@@ -10,10 +10,19 @@ import java.util.*;
  */
 public class MudManagerImpl extends UnicastRemoteObject implements MudManager
 {
-  public MudManagerImpl() throws RemoteException { }
+  private String edges;
+  private String messages;
+  private String things;
 
-  public void makeMud(String name, String edges, String messages, String things )
-    throws RemoteException, NamingException
+  public MudManagerImpl(String edges, String messages, String things) throws
+    RemoteException
+  {
+    this.edges = edges;
+    this.messages = messages;
+    this.things = things;
+  }
+
+  public void makeMud(String name) throws RemoteException, NamingException
   {
     System.out.println("Constructing MUD object " + name);
     MudImpl mudGame = new MudImpl( edges, messages, things );
