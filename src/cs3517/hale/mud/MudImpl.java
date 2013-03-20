@@ -239,6 +239,7 @@ public class MudImpl extends UnicastRemoteObject implements Mud
   public boolean addPlayer( String loc, String player ) throws RemoteException
   {
     if (players.contains( player )) return false;
+    if (player.equals("")) return false;
 
     players.add( player );
     addThing( loc, player );

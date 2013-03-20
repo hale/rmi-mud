@@ -29,8 +29,8 @@ public class MudClient
 
     String loc = mudGame.startLocation();
     // TODO: put the first bit of the for loop in the player initialiser.
-    String player;
-    for (player = question("What is your name?"); !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
+    String player = question("What is your name?");
+    for ( ; !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
     {
       System.out.println("That name has already been taken.");
     }
