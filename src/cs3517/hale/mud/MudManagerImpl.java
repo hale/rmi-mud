@@ -15,6 +15,8 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
   private String things;
   private HashSet<MudImpl> muds;
   private static final int MAX_MUDS = 3;
+  private HashSet<String> players;
+  private static final int MAX_PLAYERS = 2;
 
   public MudManagerImpl(String edges, String messages, String things) throws
     RemoteException
@@ -23,6 +25,7 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
     this.messages = messages;
     this.things = things;
     this.muds = new HashSet<MudImpl>();
+    this.players = new HashSet<String>();
   }
 
   public boolean makeMud(String name) throws RemoteException, NamingException
@@ -55,10 +58,27 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
     return list;
   }
 
-  public Mud getGame(String name) throws RemoteException, NamingException
+  public boolean addPlayer( String player )
+  {
+    if (players.contains( player )) return false;
+    if (player.equals("")) return false;
+    if (players.size() >= MAX_PLAYERS) return false;
+
+    players.add( player );
+    return true;
+  }
+
+  public Mud joinMud( String player, String name) throws RemoteException, NamingException
   {
     Context namingContext = new InitialContext();
     String url = "rmi://localhost/" + name;
-    return (Mud) namingContext.lookup( url );
+    Mud mud = (Mud) namingContext.lookup( url );
+    mud.addPlayer( mud.startLocation(), player );
+    return mud;
+  }
+
+  public void delPlayer( String player ) throws RemoteException
+  {
+    players.remove( player );
   }
 }
