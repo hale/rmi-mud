@@ -13,6 +13,8 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
   private String edges;
   private String messages;
   private String things;
+  private HashSet<MudImpl> muds;
+  private static final int MAX_MUDS = 3;
 
   public MudManagerImpl(String edges, String messages, String things) throws
     RemoteException
@@ -20,18 +22,23 @@ public class MudManagerImpl extends UnicastRemoteObject implements MudManager
     this.edges = edges;
     this.messages = messages;
     this.things = things;
+    this.muds = new HashSet<MudImpl>();
   }
 
-  public void makeMud(String name) throws RemoteException, NamingException
+  public boolean makeMud(String name) throws RemoteException, NamingException
   {
+    if (muds.size() >= MAX_MUDS) { return false; }
+
     System.out.println("Constructing MUD object " + name);
     MudImpl mudGame = new MudImpl( edges, messages, things );
+    muds.add(mudGame);
 
     System.out.println("Binding MUD object to rmiregistry");
     Context namingContext = new InitialContext();
     namingContext.bind("rmi:mud_game_" + name, mudGame);
 
     System.out.println("Waiting for invocations from clients...");
+    return true;
   }
 
   public String printableMudList() throws RemoteException, NamingException

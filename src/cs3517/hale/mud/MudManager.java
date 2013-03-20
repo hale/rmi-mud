@@ -15,8 +15,9 @@ public interface MudManager extends Remote
    * Creates a new MUD.
    *
    * @param name     Uniquely identifies the game.
+   * @return true if the mud is created, false if the mud limit is reached.
    */
-  public void makeMud(String name) throws RemoteException, NamingException;
+  public boolean makeMud(String name) throws RemoteException, NamingException;
 
   /**
    * Generates a nicely formatted list of muds managed by this MudManager.

@@ -17,7 +17,12 @@ public class MudClient
     MudManager mudManager = (MudManager) namingContext.lookup( url );
 
     if (question("Create a new MUD? (y/N)").equals("y"))
-      mudManager.makeMud( question("Type a unique name for your MUD") );
+    {
+      boolean mudMade = mudManager.makeMud( question("Type a unique name for your MUD") );
+      if (!mudMade)
+        System.out.println( "No more MUDs are allowed");
+    }
+
 
     System.out.println( mudManager.printableMudList() );
     String mudString = question("Pick a MUD game from the list above");
