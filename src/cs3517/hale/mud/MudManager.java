@@ -15,14 +15,13 @@ public interface MudManager extends Remote
    * Creates a new MUD.
    *
    * @param name     Uniquely identifies the game.
-   * @param edges    Path to an edges file.
-   * @param messages Path to an messages file.
-   * @param things   Path to an things file.
    */
   public void makeMud(String name) throws RemoteException, NamingException;
 
   /**
    * Generates a nicely formatted list of muds managed by this MudManager.
+   *
+   * @return A \n seperated string of the names of the muds.
    */
   public String printableMudList() throws RemoteException, NamingException;
 

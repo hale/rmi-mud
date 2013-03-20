@@ -53,7 +53,7 @@ public class MudClient
           || answer.equals("south") || answer.equals("west"))
       {
         String newLoc = mudGame.moveThing( loc, answer, player );
-        if (newLoc.equals(loc))
+        if (newLoc.equals(loc)) // location unchanged
           System.out.println("Can't do that.");
         else {
           loc = newLoc;
