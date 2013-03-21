@@ -6,6 +6,15 @@ import javax.naming.*;
 
 /**
  * The MUD game client, which invokes a remote method.
+ *
+ * Client is responsible for parsing user input and interacting with the game.
+ *
+ * First the client connects to a MudManager remote object, and then attempts
+ * to join or create a game.
+ *
+ * The game loop runs continually until the user types "exit".
+ *
+ * @author Philip Hale - 50907446
  */
 public class MudClient
 {
@@ -17,12 +26,8 @@ public class MudClient
     MudManager mudManager = (MudManager) namingContext.lookup( url );
 
     if (question("Create a new MUD? (y/N)").equals("y"))
-    {
-      boolean mudMade = mudManager.makeMud( question("Type a unique name for your MUD") );
-      if (!mudMade)
+      if (!mudManager.makeMud( question("Type a unique name for your MUD") ))
         System.out.println( "No more MUDs are allowed");
-    }
-
 
     System.out.println( mudManager.printableMudList() );
     String mudString = question("Pick a MUD game from the list above");
@@ -30,10 +35,9 @@ public class MudClient
     Mud mudGame = mudManager.getGame( mudString );
 
     String loc = mudGame.startLocation();
-
     String player = question("What is your name?");
-    for ( ; !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
-      System.out.println("That name has already been taken, or the server is full.");
+    for (; !mudGame.addPlayer(loc, player) ; player = question("Type your name"))
+      System.out.println("That name has been taken, or the server is full.");
 
     /** Game Loop */
     for (String answer = question(); !answer.equals("exit"); answer=question())
@@ -54,6 +58,11 @@ public class MudClient
       {
         System.out.println(mudGame.locationInfo( loc ));
       }
+      else if (answer.equals("inventory"))
+      {
+        for ( String item : mudGame.getInventory( player ))
+          System.out.println( item );
+      }
       else if (answer.equals("north") || answer.equals("east")
           || answer.equals("south") || answer.equals("west"))
       {
@@ -65,11 +74,6 @@ public class MudClient
           System.out.println( mudGame.locationInfo( loc ));
         }
       }
-      else if (answer.equals("inventory"))
-      {
-        for ( String item : mudGame.getInventory( player ))
-          System.out.println( item );
-      }
       else // currently, must be a 'pickup' command
       {
         String[] ansParts = answer.split("\\s+");
@@ -79,15 +83,12 @@ public class MudClient
           System.out.println( mudGame.pickupItem( player, ansParts[1], loc ));
         }
       }
-    }
+    } // end game loop
+    // Allows server to process user exit.
     mudGame.delPlayer( loc, player );
   }
 
-  private static String question()
-  {
-    return question("Type an action, or 'help' for help");
-  }
-
+  /* Utility method to get user input. */
   private static String question(String question)
   {
     Scanner userIn = new Scanner( System.in );
@@ -95,5 +96,11 @@ public class MudClient
     System.out.print(">> ");
     String answer = userIn.nextLine();
     return answer;
+  }
+
+  /* Default question */
+  private static String question()
+  {
+    return question("Type an action, or 'help' for help");
   }
 }

@@ -7,6 +7,8 @@ import javax.naming.*;
 /**
  * The remote interface for the MudManager.  The mud manager is responsible for
  * joining, listing, creating and deleting MUDs.
+ *
+ * @author Philip Hale - 50907446
  */
 public interface MudManager extends Remote
 {

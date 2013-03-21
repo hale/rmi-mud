@@ -13,6 +13,8 @@ import java.rmi.server.*;
 /**
  * A class that can be used to represent a MUD; essentially, this is a
  * graph.
+ *
+ * @author Philip Hale - 50907446
  */
 
 public class MudImpl extends UnicastRemoteObject implements Mud
@@ -191,11 +193,9 @@ public class MudImpl extends UnicastRemoteObject implements Mud
    */
 
   private HashSet<String> carriedItems = new HashSet<String>();
-  private HashMap<String, ArrayList<String>> inventories = new HashMap<String, ArrayList<String>>();
+  private HashMap<String, ArrayList<String>> inventories = new HashMap<String,
+          ArrayList<String>>();
 
-  /**
-   * A constructor that creates the MUD.
-   */
   public MudImpl( String edgesfile, String messagesfile, String thingsfile )
     throws RemoteException
   {
@@ -276,7 +276,8 @@ public class MudImpl extends UnicastRemoteObject implements Mud
     inventories.remove( player );
   }
 
-  public String moveThing( String loc, String dir, String thing ) throws RemoteException
+  public String moveThing( String loc, String dir, String thing ) throws
+    RemoteException
   {
     Vertex v = getVertex( loc );
     Edge e = v._routes.get( dir );
@@ -303,7 +304,8 @@ public class MudImpl extends UnicastRemoteObject implements Mud
     } catch( RemoteException e) { System.out.println(e); }
   }
 
-  public String pickupItem(String player, String item, String location) throws RemoteException
+  public String pickupItem(String player, String item, String location) throws
+    RemoteException
   {
     if (!getVertex( location )._things.contains( item ))
       return item + " is nowhere to be found.";
