@@ -30,7 +30,8 @@ public interface Mud extends Remote
    * and players.
    *
    * @return true if the player is added to the game, false if the player's
-   * name has already been taken.
+   * name has already been taken, the player name is the empty string or there
+   * is no more room in the server.
    */
   public boolean addPlayer( String loc, String thing ) throws RemoteException;
 

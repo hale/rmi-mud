@@ -27,6 +27,8 @@ public class MudImpl extends UnicastRemoteObject implements Mud
 
   private String _startLocation = "";
 
+  private static final int MAX_PLAYERS = 2;
+
   /**
    * Add a new edge to the graph.
    */
@@ -240,6 +242,7 @@ public class MudImpl extends UnicastRemoteObject implements Mud
   {
     if (players.contains( player )) return false;
     if (player.equals("")) return false;
+    if (players.size() >= MAX_PLAYERS) return false;
 
     players.add( player );
     addThing( loc, player );

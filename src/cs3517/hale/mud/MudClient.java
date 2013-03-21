@@ -33,7 +33,7 @@ public class MudClient
 
     String player = question("What is your name?");
     for ( ; !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
-      System.out.println("That name has already been taken.");
+      System.out.println("That name has already been taken, or the server is full.");
 
     /** Game Loop */
     for (String answer = question(); !answer.equals("exit"); answer=question())
