@@ -238,6 +238,9 @@ public class MudImpl extends UnicastRemoteObject implements Mud
   private HashSet<String> players = new HashSet<String>();
   public boolean addPlayer( String loc, String player ) throws RemoteException
   {
+    if (players.contains( player )) return false;
+    if (player.equals("")) return false;
+
     players.add( player );
     addThing( loc, player );
     return true;

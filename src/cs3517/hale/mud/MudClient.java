@@ -16,10 +16,6 @@ public class MudClient
     String url = "rmi://localhost/mud_game_mud_manager";
     MudManager mudManager = (MudManager) namingContext.lookup( url );
 
-    String player = question("What is your name?");
-    for ( ; !mudManager.addPlayer( player) ; player = question("What is your name?"))
-      System.out.println("That name is taken, or the server is full.");
-
     if (question("Create a new MUD? (y/N)").equals("y"))
     {
       boolean mudMade = mudManager.makeMud( question("Type a unique name for your MUD") );
@@ -27,22 +23,17 @@ public class MudClient
         System.out.println( "No more MUDs are allowed");
     }
 
+
     System.out.println( mudManager.printableMudList() );
     String mudString = question("Pick a MUD game from the list above");
 
-    Mud mudGame = null;
-    try{
-      mudGame = mudManager.joinMud( player, mudString );
-    } catch( Exception e ) {
-      System.out.println("That MUD is full, or doesn't exist.");
-      mudManager.delPlayer( player );
-      return;
-    }
-
+    Mud mudGame = mudManager.getGame( mudString );
 
     String loc = mudGame.startLocation();
 
-    System.out.println("Welcome to " + mudString + ", " + player);
+    String player = question("What is your name?");
+    for ( ; !mudGame.addPlayer(loc, player) ; player = question("What is your name?"))
+      System.out.println("That name has already been taken.");
 
     /** Game Loop */
     for (String answer = question(); !answer.equals("exit"); answer=question())
@@ -90,7 +81,6 @@ public class MudClient
       }
     }
     mudGame.delPlayer( loc, player );
-    mudManager.delPlayer( player );
   }
 
   private static String question()

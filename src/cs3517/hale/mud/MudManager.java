@@ -3,7 +3,6 @@ package cs3517.hale.mud;
 import java.rmi.*;
 import java.util.*;
 import javax.naming.*;
-//import cs3517.hale.mud.*;
 
 /**
  * The remote interface for the MudManager.  The mud manager is responsible for
@@ -28,30 +27,12 @@ public interface MudManager extends Remote
   public String printableMudList() throws RemoteException, NamingException;
 
   /**
-   * Adds a player to a MUD.
+   * Returns the stub interface for a MUD with a given name.
    *
-   * @param player The player to add.
-   * @param mud Name of the mud to join.
-   * @return The joined mud (interface / stub).
+   * @param name The name of the mud game to return.
+   * @return A Mud
    */
-  public Mud joinMud( String player, String name ) throws RemoteException, NamingException;
-
-  /**
-   * Adds a player to the universal player list. This list is used to limit the
-   * number of users in any MUD, and also to ensure unique names between
-   * different mud instanced.
-   *
-   * @param player Name of the player to add
-   * @return true if the player was added, false otherwise.
-   */
-  public boolean addPlayer( String player ) throws RemoteException;
-
-  /**
-   * Delete a player from the universal player list.
-   *
-   * @param player The player to remove.
-   */
-  public void delPlayer( String player ) throws RemoteException;
+  public Mud getGame(String name) throws RemoteException, NamingException;
 
 
 }
